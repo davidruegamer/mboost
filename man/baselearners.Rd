@@ -29,8 +29,7 @@ bols(..., by = NULL, index = NULL, intercept = TRUE, df = NULL,
 ## smooth P-spline base-learner
 bbs(..., by = NULL, index = NULL, knots = 20, boundary.knots = NULL,
     degree = 3, differences = 2, df = 4, lambda = NULL, center = FALSE,
-    cyclic = FALSE, constraint = c("none", "increasing", "decreasing"),
-    deriv = 0)
+    cyclic = FALSE, constraint = NULL, deriv = 0)
 
 ## bivariate P-spline base-learner
 bspatial(..., df = 6)
@@ -171,10 +170,12 @@ bl1 \%O\% bl2
                   Defines hyper-parameters for the trees which are used as base-learners,
                   stumps are fitted by default.}
   \item{constraint}{ type of constraint to be used. The constraint can
-    be either monotonic "increasing" (default), "decreasing" or "convex"
-    or "concave". Additionally, "none" can be used to specify
-    unconstrained P-splines. This is especially of interest in
-    conjunction with \code{boundary.constraints = TRUE}.}
+    be either monotonic \code{"increasing"} (default), \code{"decreasing"} 
+    or \code{"convex"} or \code{"concave"}. Additionally, \code{"none"} can 
+    be used to specify unconstrained P-splines. This is especially of interest in
+    conjunction with \code{boundary.constraints = TRUE}. Note that the 
+    \code{constraint} argument of \code{bbs} is deprecated. For constrained 
+    base-leaners use \code{bmono}.}
   \item{type}{
     determines how the constrained least squares problem should be
     solved. If \code{type = "quad.prog"}, a numeric quadratic
@@ -391,9 +392,7 @@ bl1 \%O\% bl2
   convexity/concavity (see and Eilers, 2005). For more details in the
   boosting context and monotonic effects of ordinal factors see Hofner,
   Mueller and Hothorn (2011b). The quadratic-programming based algorithm
-  is described in Hofner et al. (2014). Alternative monotonicity
-  constraints are implemented via T-splines in \code{bbs()} (Beliakov,
-  2000).
+  is described in Hofner et al. (2014).
 
   Two or more linear base-learners can be joined using \code{\%+\%}. A
   tensor product of two or more linear base-learners is returned by
