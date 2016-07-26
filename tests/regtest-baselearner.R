@@ -420,48 +420,11 @@ stopifnot(all.equal(c1, c2))
 stopifnot(all.equal(c1, c3))
 
 ### new T spline monotonicity
-library("lattice")
-
 options(mboost_useMatrix = FALSE)
 x <- sort(runif(100, max = 2))
 y <- sin(x) + rnorm(100, sd = .1) + 10
-layout(matrix(1:3, nc = 3))
-plot(x, y)
-m1 <- mboost(y ~ bbs(x))
-lines(x, fitted(m1))
-plot(x, y)
-m2 <- mboost(y ~ bbs(x, constraint = "increasing"))
-lines(x, fitted(m2))
-plot(x, -y)
-m3 <- mboost(I(-y) ~ bbs(x, constraint = "decreasing"))
-lines(x, fitted(m3))
-
-
-### penalty problem -- penalize differences???
-bl <- bbs(x, constraint = "increasing", lambda = 100)
-lines(x, bl$dpp(rep(1, length(y)))$fit(y)$fitted(), col = "red")
-
-x1 <- seq(from = -3, to = 3, by = .1)
-x2 <- seq(from = 0, to = 2 * pi, by = .1)
-m2 <- sin(x2)
-y <- sapply(m2, function(m) pnorm(x1, mean = m))
-x <- expand.grid(x1 = x1, x2 = x2)
-y <- x$y <- as.vector(y) + runif(nrow(x), min = -.3, max = .3)
-
-wireframe(y ~ x1 + x2, data = x)
-
-m1 <- mboost(y ~ bbs(x1) %O% bbs(x2))
-x$p1 <- fitted(m1)
-wireframe(p1 ~ x1 + x2, data = x)
-
-m2 <- mboost(y ~ bbs(x1, constraint = "increasing", df = 10) %O% bbs(x2))
-x$p2 <- fitted(m2)
-wireframe(p2 ~ x1 + x2, data = x)
-
-m3 <- mboost(I(-y) ~ bbs(x1, constraint = "decreasing", df = 10) %O% bbs(x2))
-x$p3 <- fitted(m3)
-wireframe(p3 ~ x1 + x2, data = x)
-
+error <- try(mboost(y ~ bbs(x, constraint = "increasing")))
+stopifnot(inherits(error, "try-error"))
 
 ### check brandom
 x1 <- rnorm(100)
