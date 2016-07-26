@@ -420,22 +420,11 @@ stopifnot(all.equal(c1, c2))
 stopifnot(all.equal(c1, c3))
 
 ### new T spline monotonicity
-library("lattice")
-
 options(mboost_useMatrix = FALSE)
 x <- sort(runif(100, max = 2))
 y <- sin(x) + rnorm(100, sd = .1) + 10
-layout(matrix(1:3, nc = 3))
-plot(x, y)
-m1 <- mboost(y ~ bbs(x))
-lines(x, fitted(m1))
-plot(x, y)
-m2 <- mboost(y ~ bbs(x, constraint = "increasing"))
-lines(x, fitted(m2))
-plot(x, -y)
-m3 <- mboost(I(-y) ~ bbs(x, constraint = "decreasing"))
-lines(x, fitted(m3))
-
+error <- try(mboost(y ~ bbs(x, constraint = "increasing")))
+stopifnot(inherits(error, "try-error"))
 
 ### penalty problem -- penalize differences???
 bl <- bbs(x, constraint = "increasing", lambda = 100)
